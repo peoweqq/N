@@ -1,0 +1,205 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.site-title {
+  view-transition-name: site-title;
+  transition: 0.2s ease;
+}
+
+.item {
+  transition: 0.2s ease;
+}
+
+
+.search-icon {
+  position: relative;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  appearance: none;
+  outline: none;
+  border: none;
+  background: var(--cell-background-color);
+  border-radius: 50%;
+  box-shadow: var(--shadows);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  flex-shrink: 0;
+  margin-left: auto;
+
+  &:after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--highlight-color);
+    border-radius: 50%;
+    position: relative;
+    display: block;
+  }
+
+  &:before {
+    content: '';
+    width: 6px;
+    height: 2px;
+    background: var(--highlight-color);
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadows-hover);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:checked {
+    background: var(--highlight-color);
+
+    &:after {
+      border-color: var(--cell-background-color);
+    }
+
+    &:before {
+      background: var(--cell-background-color);
+    }
+  }
+}
+
+.search-icon:checked + .search-form {
+  display: block !important;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-form {
+  display: none;
+  background: var(--cell-background-color);
+  padding: 16px;
+  border-radius: var(--box-border-radius);
+  box-shadow: var(--shadows);
+  border: 1px solid var(--border-color);
+  margin-top: 12px;
+  position: relative;
+  width: 100%;
+  order: 3;
+
+  > input {
+    border: 2px solid var(--border-color);
+    border-radius: var(--box-border-radius);
+    background: var(--cell-background-color);
+    color: var(--foreground-color);
+    outline: none;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+
+  > input:focus {
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+  }
+
+  > input::placeholder {
+    color: var(--secondary-color);
+  }
+}
+
+.copyright-wrap {
+  color: #666;
+  line-height: 1.5;
+  font-size: 14px;
+  display: none;
+  padding: 8px;
+}
+
+@media screen and (min-width: 600px) {
+}
+
+#back-to-top {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--cell-background-color);
+  color: var(--secondary-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  border: 1px solid var(--border-color);
+  font-size: 24px;
+  text-decoration: none;
+  opacity: 0;
+  box-shadow: var(--shadows);
+  transition:
+    opacity 0.3s,
+    transform 0.3s,
+    box-shadow 0.3s;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadows-hover);
+  }
+
+  &:active {
+    transform: translateY(-2px);
+  }
+
+  img {
+    filter: var(--icon-secondary-filter);
+  }
+}
+
+/* Use @scroll-timeline to control the display of the button */
+@supports (animation-timeline: view()) {
+  #back-to-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s linear both;
+    animation-timeline: view(block 0 100vh);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      pointer-events: none;
+    }
+    to {
+      opacity: 0.9;
+      pointer-events: auto;
+    }
+  }
+}

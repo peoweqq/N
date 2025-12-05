@@ -1,0 +1,268 @@
+---
+import { getEnv } from '../lib/env'
+import voidFile from '../assets/void.png'
+import podcast from '../assets/podcast.svg'
+import twitter from '../assets/twitter.svg'
+import github from '../assets/github.svg'
+import discord from '../assets/discord.svg'
+import telegram from '../assets/telegram.svg'
+import mastodon from '../assets/mastodon.svg'
+import bluesky from '../assets/bluesky.svg'
+
+const { SITE_URL } = Astro.locals
+const { channel } = Astro.props
+const currentPath = Astro.url.pathname.replace(/\/$/, '')
+const isHomePage = currentPath === '' || currentPath === '/'
+
+const GOOGLE_SEARCH_SITE = getEnv(import.meta.env, Astro, 'GOOGLE_SEARCH_SITE')
+const searchAction = GOOGLE_SEARCH_SITE ? 'https://www.google.com/search' : '/search/result'
+
+const PODCASRT = getEnv(import.meta.env, Astro, 'PODCASRT')
+const TWITTER = getEnv(import.meta.env, Astro, 'TWITTER')
+const GITHUB = getEnv(import.meta.env, Astro, 'GITHUB')
+const TELEGRAM = getEnv(import.meta.env, Astro, 'TELEGRAM')
+const DISCORD = getEnv(import.meta.env, Astro, 'DISCORD')
+const MASTODON = getEnv(import.meta.env, Astro, 'MASTODON')
+const BLUESKY = getEnv(import.meta.env, Astro, 'BLUESKY')
+
+const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
+---
+
+<div id="header">
+  {!isHomePage && (
+    <a href={SITE_URL} class="back-button" title="返回首页">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  )}
+  <div class="header-title">
+    <a href={SITE_URL} class="site-title" title={channel?.title}>
+      {channel?.title}
+    </a>
+  </div>
+  <div class="header-icons">
+    <form class="header-search-form" action={searchAction} method="get">
+      {GOOGLE_SEARCH_SITE ? <input type="hidden" name="as_sitesearch" value={GOOGLE_SEARCH_SITE} /> : null}
+      <input type="text" name="q" placeholder="搜索..." class="header-search-input" />
+      <button type="submit" class="header-search-button" title="搜索">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="7" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+          <path d="m10 10 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </form>
+
+    {
+      PODCASRT && (
+        <a href={PODCASRT} target="_blank" title="Podcast">
+          <img {...podcast} alt="Podcast" class="social-icon" width="1em" />
+        </a>
+      )
+    }
+
+    {
+      TWITTER && TWITTER.length > 0 && (
+        <a href={`https://twitter.com/${TWITTER}`} title="Twitter" target="_blank">
+          <img {...twitter} alt={`twitter.com/${TWITTER}`} class="social-icon" width="1em" />
+        </a>
+      )
+    }
+
+    {
+      GITHUB && GITHUB.length > 0 && (
+        <a href={`https://github.com/${GITHUB}`} title="GitHub" target="_blank">
+          <img {...github} alt={`github.com/${GITHUB}`} class="social-icon" width="1em" />
+        </a>
+      )
+    }
+
+    {
+      TELEGRAM && TELEGRAM.length > 0 && (
+        <a href={`https://t.me/${TELEGRAM}`} title="Telegram" target="_blank">
+          <img {...telegram} alt={`t.me/${TELEGRAM}`} class="social-icon" width="1em" />
+        </a>
+      )
+    }
+
+    {
+      DISCORD && DISCORD.length > 0 && (
+        <a href={DISCORD} title="Discord" target="_blank">
+          <img {...discord} alt="Discord Invite" class="social-icon" width="1em" />
+        </a>
+      )
+    }
+
+    {
+      MASTODON && MASTODON.length > 0 && (
+        <a href={`https://${MASTODON}`} title="Mastodon" target="_blank">
+          <img {...mastodon} alt={`@${MASTODON}`} class="social-icon" width="1em" />
+        </a>
+      )
+    }
+
+    {
+      BLUESKY && BLUESKY.length > 0 && (
+        <a href={`https://bsky.app/profile/${BLUESKY}`} title="BlueSky" target="_blank">
+          <img {...bluesky} alt={`@${BLUESKY}`} class="social-icon" width="1em" />
+        </a>
+      )
+    }
+  </div>
+</div>
+
+{
+  channel?.descriptionHTML && channel?.descriptionHTML.length > 0 && (
+    <div class="text-box" id="site-intro" set:html={channel?.descriptionHTML} />
+  )
+}
+
+<style>
+  #site-intro {
+    color: var(--secondary-color);
+    background-color: var(--code-background-color);
+    word-break: break-word;
+
+    & :global(.emoji) {
+      font-style: normal;
+      margin-right: 2px;
+    }
+  }
+
+  .social-icon {
+    padding: 5px;
+  }
+
+  .header-icons {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-search-form {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 6px 8px 6px 14px;
+    transition: all 0.2s ease;
+  }
+
+  .header-search-form:focus-within {
+    border-color: var(--highlight-color);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+  }
+
+  .header-search-input {
+    border: none;
+    background: transparent;
+    color: var(--foreground-color);
+    font-size: 14px;
+    outline: none;
+    width: 140px;
+    padding: 2px 0;
+  }
+
+  .header-search-input::placeholder {
+    color: var(--secondary-color);
+  }
+
+  .header-search-button {
+    border: none;
+    background: transparent;
+    color: var(--highlight-color);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .header-search-button:hover {
+    transform: scale(1.1);
+    color: var(--accent-color);
+  }
+
+  .header-search-button:active {
+    transform: scale(0.95);
+  }
+
+  .back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--cell-background-color);
+    border: 1px solid var(--border-color);
+    color: var(--foreground-color);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-right: 12px;
+    box-shadow: var(--shadows);
+    order: -1;
+  }
+
+  .back-button:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--highlight-color);
+    color: var(--highlight-color);
+    transform: translateX(-2px);
+    box-shadow: var(--shadows-hover);
+  }
+
+  .back-button:active {
+    transform: translateX(-2px) scale(0.95);
+  }
+
+  .back-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media screen and (max-width: 600px) {
+    .back-button {
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+    }
+
+    .back-button svg {
+      width: 16px;
+      height: 16px;
+    }
+    #header {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .header-icons {
+      width: 100%;
+      order: 3;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .header-search-form {
+      width: 100%;
+      order: 1;
+      padding: 8px 10px 8px 14px;
+    }
+
+    .header-search-input {
+      width: 100%;
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .social-icon {
+      order: 2;
+    }
+  }
+</style>

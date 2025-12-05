@@ -1,0 +1,31 @@
+---
+import List from '../../components/list.astro'
+import { getChannelInfo } from '../../lib/telegram'
+
+// Get search parameter from URL path or query string
+// For route /search/[q], Astro.params.q contains the path segment
+// Astro automatically decodes route params, so /search/%23工行 -> Astro.params.q = "#工行"
+// Priority: query parameter first (for form submissions), then path parameter (for tag links)
+let q = Astro.url.searchParams.get('q') || Astro.params.q || ''
+
+// Ensure q is decoded (not double-encoded)
+// If it's already a decoded string like "#WeChat", use it as is
+// If it's encoded like "%23WeChat", decode it first
+if (q && q.includes('%')) {
+  try {
+    q = decodeURIComponent(q)
+  } catch (e) {
+    // If decoding fails, use as is
+  }
+}
+
+const channel = await getChannelInfo(Astro, {
+  q,
+})
+
+channel.seo = {
+  title: q ? `${q}` : 'Search',
+}
+---
+
+<List channel={channel} before={false} after={false} />

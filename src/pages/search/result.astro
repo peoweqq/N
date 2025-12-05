@@ -1,0 +1,18 @@
+---
+import List from '../../components/list.astro'
+import { getChannelInfo } from '../../lib/telegram'
+
+// Handle search form submissions with query parameter
+const q = Astro.url.searchParams.get('q') || ''
+
+const channel = await getChannelInfo(Astro, {
+  q,
+})
+
+channel.seo = {
+  title: q ? `搜索: ${q}` : '搜索',
+}
+---
+
+<List channel={channel} before={false} after={false} />
+
