@@ -270,25 +270,12 @@
     border: none;
   }
 
-  .spoiler-button {
-    cursor: pointer;
-
-    input {
-      display: none;
-    }
-
-    tg-spoiler {
-      color: transparent;
-      margin: auto 2px;
-      border-radius: var(--box-border-radius);
-      background: #ccc 60% 60% / 3000px 3000px;
-      background-image: repeating-conic-gradient(#999 0 0.0001%, #0000 0 0.0002%);
-    }
-
-    input:checked + tg-spoiler {
-      background: unset;
-      color: unset;
-    }
+  /* Hide spoiler UI entirely (used for manual tokenized hints) */
+  .spoiler-button,
+  .spoiler-button tg-spoiler,
+  tg-spoiler,
+  tg-spoiler-text {
+    display: none !important;
   }
 }
 

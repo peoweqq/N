@@ -127,6 +127,24 @@ function modifyHTMLContent($, content, { index } = {}) {
     $(a)?.attr('title', $(a)?.text())?.removeAttr('onclick')
   })
   
+  // Drop manually-added spoilers used to hide tokenized text (e.g. for CN search)
+  $(content).find('tg-spoiler-text, tg-spoiler, label.spoiler-button')?.each((_index, spoiler) => {
+    const $spoiler = $(spoiler)
+    if ($spoiler.is('label.spoiler-button')) {
+      $spoiler.remove()
+    }
+    else {
+      // Remove the spoiler node and any existing wrapper to avoid rendering it
+      const $wrapper = $spoiler.closest('label.spoiler-button')
+      if ($wrapper.length) {
+        $wrapper.remove()
+      }
+      else {
+        $spoiler.remove()
+      }
+    }
+  })
+  
   // Handle expandable blockquotes
   $(content).find('blockquote[expandable]').each((_index, blockquote) => {
     const $blockquote = $(blockquote)
@@ -153,10 +171,7 @@ function modifyHTMLContent($, content, { index } = {}) {
     }
   })
   
-  $(content).find('tg-spoiler')?.each((_index, spoiler) => {
-    const id = `spoiler-${index}-${_index}`
-    $(spoiler)?.attr('id', id)?.wrap('<label class="spoiler-button"></label>')?.before(`<input type="checkbox" />`)
-  })
+  // Skip rendering of tg-spoiler entirely (handled above), so no wrapping
   $(content).find('pre').each((_index, pre) => {
     try {
       $(pre).find('br')?.replaceWith('\n')
