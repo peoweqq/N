@@ -22,7 +22,7 @@ const seoParams = {
   title: seo?.title,
   description: seo?.text ?? channel?.description,
   canonical,
-  noindex: seo?.noindex ?? getEnv(import.meta.env, Astro, 'NOINDEX'),
+  noindex: false,
   nofollow: seo?.nofollow ?? getEnv(import.meta.env, Astro, 'NOFOLLOW'),
   openGraph: {
     basic: {
