@@ -16,6 +16,7 @@ const isHomePage = currentPath === '' || currentPath === '/'
 
 const GOOGLE_SEARCH_SITE = getEnv(import.meta.env, Astro, 'GOOGLE_SEARCH_SITE')
 const searchAction = GOOGLE_SEARCH_SITE ? 'https://www.google.com/search' : '/search/result'
+const hasTagsPage = (getEnv(import.meta.env, Astro, 'TAGS') || '').split(',').filter(Boolean).length > 0
 
 const PODCASRT = getEnv(import.meta.env, Astro, 'PODCASRT')
 const TWITTER = getEnv(import.meta.env, Astro, 'TWITTER')
@@ -42,6 +43,17 @@ const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
     </a>
   </div>
   <div class="header-icons">
+    {
+      hasTagsPage && (
+        <a href={`${SITE_URL}tags`} class="header-icon-button" title="Tags" aria-label="Tags">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 0 1.414l-5.414 5.414a1 1 0 0 1-1.414 0L2 8.707V2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <circle cx="5.5" cy="5.5" r="1" fill="currentColor"/>
+          </svg>
+        </a>
+      )
+    }
+
     <form class="header-search-form" action={searchAction} method="get">
       {GOOGLE_SEARCH_SITE ? <input type="hidden" name="as_sitesearch" value={GOOGLE_SEARCH_SITE} /> : null}
       <input type="text" name="q" placeholder="搜索..." class="header-search-input" />
@@ -137,6 +149,32 @@ const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
     gap: 8px;
     display: flex;
     align-items: center;
+  }
+
+  .header-icon-button {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .header-icon-button:hover {
+    color: var(--highlight-color);
+    border-color: var(--highlight-color);
+    background: rgba(0, 212, 255, 0.1);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  .header-icon-button:active {
+    transform: scale(0.95);
   }
 
   .header-search-form {
